@@ -4,7 +4,6 @@ import 'package:musicvoxaplay/screens/services/song_service.dart';
 import 'package:musicvoxaplay/screens/song menu/playnext_service.dart';
 import 'package:musicvoxaplay/screens/widgets/appbar.dart';
 import 'package:musicvoxaplay/screens/widgets/bottom_navigationbar.dart';
-import 'package:musicvoxaplay/screens/widgets/colors.dart';
 import 'package:musicvoxaplay/screens/audio/audio_fullscreen.dart';
 import 'package:musicvoxaplay/screens/audio/audio_playermanager.dart';
 import 'package:musicvoxaplay/screens/song%20menu/song_menubar.dart';
@@ -40,37 +39,8 @@ class _MostPlayedState extends State<MostPlayed> {
     }
   }
 
-  Future<void> _toggleFavorite(Song song) async {
-    try {
-      setState(() {
-        song.isFavorite = !song.isFavorite;
-      });
-      await _songService.updateFavoriteStatus(song);
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              song.isFavorite
-                  ? 'Added "${song.title}" to Favorites'
-                  : 'Removed "${song.title}" from Favorites',
-            ),
-            duration: const Duration(seconds: 2),
-          ),
-        );
-      }
-    } catch (e) {
-      setState(() {
-        song.isFavorite = !song.isFavorite; 
-      });
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error updating favorite: $e')),
-        );
-      }
-    }
-  }
-
-  @override
+  
+ @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -143,17 +113,7 @@ class _MostPlayedState extends State<MostPlayed> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      IconButton(
-                        icon: Icon(
-                          song.isFavorite ? Icons.favorite : Icons.favorite_border,
-                          color: song.isFavorite ? AppColors.red : Theme.of(context).textTheme.bodyLarge!.color,
-                          size: 20.0,
-                        ),
-                        onPressed: () => _toggleFavorite(song),
-                        padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(),
-                      ),
-                      const SizedBox(width: 8.0),
+                  const SizedBox(width: 8.0),
                       IconButton(
                         icon: Icon(
                           Icons.more_horiz,
@@ -200,7 +160,7 @@ class _MostPlayedState extends State<MostPlayed> {
                               ),
                             ),
                           );
-                          setState(() {}); // Refresh to update play count
+                          setState(() {});                                                  
                         } catch (e) {
                           if (mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(

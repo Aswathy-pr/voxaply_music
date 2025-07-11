@@ -34,11 +34,11 @@ class FavoriteService {
           SnackBar(
             content: Text(
               updatedSong.isFavorite
-                  ? 'Added "${updatedSong.title}" to Favorites'
+                  ? 'Added "${updatedSong.title}" to Favorites' 
                   : 'Removed "${updatedSong.title}" from Favorites',
             ),
             duration: const Duration(seconds: 2),
-            backgroundColor: updatedSong.isFavorite ? Colors.green : Colors.grey,
+            backgroundColor: updatedSong.isFavorite ? Colors.red[900] : Colors.grey,
           ),
         );
       }

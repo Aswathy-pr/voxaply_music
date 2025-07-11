@@ -14,7 +14,8 @@ class PlaylistPage extends StatefulWidget {
 
 class _PlaylistPageState extends State<PlaylistPage> {
   final TextEditingController _searchController = TextEditingController();
-  final Box<Map<String, List<String>>> _playlistSongsBox = Hive.box<Map<String, List<String>>>('playlistSongsBox');
+  final Box<Map<String, List<String>>> _playlistSongsBox =
+      Hive.box<Map<String, List<String>>>('playlistSongsBox');
   List<String> _songPaths = [];
   List<String> _selectedSongs = [];
 
@@ -32,23 +33,25 @@ class _PlaylistPageState extends State<PlaylistPage> {
 
   void _onSearchChanged(String query) {
     setState(() {
-      _songPaths = (_playlistSongsBox.get(widget.playlistName)?[widget.playlistName] ?? [])
-          .where((path) => path.toLowerCase().contains(query.toLowerCase()))
-          .toList();
+      _songPaths =
+          (_playlistSongsBox.get(widget.playlistName)?[widget.playlistName] ??
+                  [])
+              .where((path) => path.toLowerCase().contains(query.toLowerCase()))
+              .toList();
     });
   }
 
   Future<void> _addSongs() async {
     final selectedSongs = await Navigator.push<List<Song>>(
       context,
-      MaterialPageRoute(
-        builder: (context) => const Searchpage(),
-      ),
+      MaterialPageRoute(builder: (context) => const Searchpage()),
     );
 
     if (selectedSongs != null && selectedSongs.isNotEmpty) {
       setState(() {
-        final currentSongs = _playlistSongsBox.get(widget.playlistName) ?? {widget.playlistName: []};
+        final currentSongs =
+            _playlistSongsBox.get(widget.playlistName) ??
+            {widget.playlistName: []};
         final updatedSongs = currentSongs[widget.playlistName] ?? [];
         for (var song in selectedSongs) {
           if (!updatedSongs.contains(song.path)) {
@@ -57,9 +60,13 @@ class _PlaylistPageState extends State<PlaylistPage> {
         }
         currentSongs[widget.playlistName] = updatedSongs;
         _playlistSongsBox.put(widget.playlistName, currentSongs);
-        _loadSongs(); 
+        _loadSongs();
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Added ${selectedSongs.length} songs to ${widget.playlistName}')),
+          SnackBar(
+            content: Text(
+              'Added ${selectedSongs.length} songs to ${widget.playlistName}',
+            ),
+          ),
         );
       });
     }
@@ -81,7 +88,11 @@ class _PlaylistPageState extends State<PlaylistPage> {
               icon: const Icon(Icons.save),
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Saved ${_selectedSongs.length} songs to ${widget.playlistName}')),
+                  SnackBar(
+                    content: Text(
+                      'Saved ${_selectedSongs.length} songs to ${widget.playlistName}',
+                    ),
+                  ),
                 );
                 setState(() {
                   _selectedSongs.clear();
