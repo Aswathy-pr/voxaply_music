@@ -1,43 +1,55 @@
 import 'package:flutter/material.dart';
-import 'package:musicvoxaplay/screens/widgets/appbar.dart';
-import 'package:musicvoxaplay/screens/widgets/bottom_navigationbar.dart';
+import 'package:musicvoxaplay/screens/models/video_models.dart';
+import 'package:musicvoxaplay/screens/services/video_service.dart';
 
-
-class Videopage extends StatefulWidget {
-  const Videopage({super.key});
-
+class VideoPage extends StatefulWidget {
   @override
-  _VideopageState createState() => _VideopageState();
+  _VideoPageState createState() => _VideoPageState();
 }
 
-class _VideopageState extends State<Videopage> {
-  int _currentIndex = 1; 
+class _VideoPageState extends State<VideoPage> {
+  List<Video> _videos = [];
+  bool _isLoading = false;
 
-  void _onTabTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
+  Future<void> _loadVideos() async {
+    setState(() => _isLoading = true);
+    try {
+      final videos = await VideoService.fetchLocalVideos();
+      setState(() => _videos = videos);
+    } finally {
+      setState(() => _isLoading = false);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: buildAppBar(context, 'All videos', showBackButton: true),
-   
-      body:  Center(
-        child: Text('videos not found',
-           style: Theme.of(context).textTheme.bodyLarge,),
-      ),
-
-      
-      bottomNavigationBar: buildBottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: _onTabTapped,
-        context: context, 
-      ),
+      appBar: AppBar(title: Text('My Videos')),
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : _videos.isEmpty
+              ? Center(
+                  child: ElevatedButton(
+                    child: Text('Load Videos'),
+                    onPressed: _loadVideos,
+                  ),
+                )
+              : ListView.builder(
+                  itemCount: _videos.length,
+                  itemBuilder: (context, index) {
+                    final video = _videos[index];
+                    return ListTile(
+                      leading: Icon(Icons.video_library),
+                      title: Text(video.title),
+                      subtitle: Text(video.path),
+                      trailing: Text(video.duration),
+                      onTap: () {
+                        // Add video playback later
+                        print('Playing: ${video.path}');
+                      },
+                    );
+                  },
+                ),
     );
   }
 }
-
-

@@ -31,7 +31,7 @@ Widget buildBottomNavigationBar({
           case 1:
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const Videopage()),
+              MaterialPageRoute(builder: (context) =>  VideoPage()),
             );
             break;
           case 2:
